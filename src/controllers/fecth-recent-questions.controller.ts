@@ -22,7 +22,7 @@ export class FecthRecentQuestionsController {
 
   @Get()
   async handle(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
-    const registersPerPage = 1;
+    const registersPerPage = 20;
     const questions = await this.prisma.question.findMany({
       orderBy: {
         createdAt: "desc",
