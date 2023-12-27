@@ -3,6 +3,7 @@ import { JwtAuthGuard } from "@/infra/auth/jwt-auth.guard";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipes";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { z } from "zod";
+import { FecthRecentQuestionsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
 
 const pageQueryParamSchema = z
   .string()
@@ -18,19 +19,11 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>;
 @Controller("/questions")
 @UseGuards(JwtAuthGuard)
 export class FecthRecentQuestionsController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private fetchRecentQuestions: FecthRecentQuestionsUseCase) {}
 
   @Get()
   async handle(@Query("page", queryValidationPipe) page: PageQueryParamSchema) {
-    const registersPerPage = 20;
-    const questions = await this.prisma.question.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: registersPerPage,
-      skip: (page - 1) * registersPerPage,
-    });
-
+    const questions = await this.fetchRecentQuestions.execute({ page });
     return { questions };
   }
 }

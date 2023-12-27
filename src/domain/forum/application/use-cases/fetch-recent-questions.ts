@@ -1,6 +1,7 @@
 import { Result, success } from "@/core/result";
 import { Question } from "../../enterprise/entities/question";
 import { QuestionsRepository } from "../repositories/questions-repository";
+import { Injectable } from "@nestjs/common";
 
 interface FecthRecentQuestionsUseCaseRequest {
   page: number;
@@ -13,6 +14,7 @@ type FecthRecentQuestionsUseCaseResponse = Result<
   }
 >;
 
+@Injectable()
 export class FecthRecentQuestionsUseCase {
   constructor(private questionsRepository: QuestionsRepository) {}
 
