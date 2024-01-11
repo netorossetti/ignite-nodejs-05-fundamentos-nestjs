@@ -8,7 +8,7 @@ import request from "supertest";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
 
-describe("E2E: Edit Question Controller", () => {
+describe("E2E: Answer Question Controller", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let studentFactory: StudentFactory;
@@ -34,7 +34,7 @@ describe("E2E: Edit Question Controller", () => {
     await app.close();
   });
 
-  test("[PUT] /questions/:id", async () => {
+  test("[POST] /questions/:questionId/answers", async () => {
     const user = await studentFactory.makePrismaStudent();
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
@@ -44,17 +44,17 @@ describe("E2E: Edit Question Controller", () => {
     const questionId = question.id.toString();
 
     const response = await request(app.getHttpServer())
-      .put(`/questions/${questionId}`)
+      .post(`/questions/${questionId}/answers`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
-        title: "Novo Titulo da Pergunta",
-        content: "Novo Conteúdo da pergunta",
+        content: "Nova resposta para a pergunta",
       });
-    expect(response.statusCode).toBe(204);
 
-    const questionOnDatabase = await prisma.question.findUnique({
-      where: { id: questionId },
+    expect(response.statusCode).toBe(201);
+
+    const answerOnDatabase = await prisma.answer.findFirst({
+      where: { questionId: questionId },
     });
-    expect(questionOnDatabase).toBeTruthy();
+    expect(answerOnDatabase).toBeTruthy();
   });
 });
