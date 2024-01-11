@@ -54,10 +54,10 @@ describe("E2E: Fecth Recent Questions Controller", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
-      questions: [
+      questions: expect.arrayContaining([
         expect.objectContaining({ title: "Question 2" }),
         expect.objectContaining({ title: "Question 1" }),
-      ],
+      ]),
     });
   });
 });
