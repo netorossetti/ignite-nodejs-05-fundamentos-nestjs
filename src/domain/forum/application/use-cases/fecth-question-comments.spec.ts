@@ -1,16 +1,16 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { InMemoryQuestionCommentsRepository } from "test/repositories/in-memory-question-comments-repository";
-import { FecthQuestionCommentsUseCase } from "./fecth-question-comments";
+import { FetchQuestionCommentsUseCase } from "./fetch-question-comments";
 import { makeQuestionComment } from "test/factories/make-question-comment";
 
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
-let sut: FecthQuestionCommentsUseCase;
+let sut: FetchQuestionCommentsUseCase;
 
-describe("Fecth Question Comments", () => {
+describe("Fetch Question Comments", () => {
   beforeEach(() => {
     inMemoryQuestionCommentsRepository =
       new InMemoryQuestionCommentsRepository();
-    sut = new FecthQuestionCommentsUseCase(inMemoryQuestionCommentsRepository);
+    sut = new FetchQuestionCommentsUseCase(inMemoryQuestionCommentsRepository);
 
     // habilitar uso de datas fakes no new Date()
     vi.useFakeTimers();

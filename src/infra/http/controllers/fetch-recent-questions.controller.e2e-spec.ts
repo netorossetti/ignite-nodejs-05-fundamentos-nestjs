@@ -8,7 +8,7 @@ import request from "supertest";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
 
-describe("E2E: Fecth Recent Questions Controller", () => {
+describe("E2E: Fetch Recent Questions Controller", () => {
   let app: INestApplication;
   let studentFactory: StudentFactory;
   let questionFactory: QuestionFactory;

@@ -1,26 +1,28 @@
 import { Result, success } from "@/core/result";
 import { Answer } from "../../enterprise/entities/answer";
 import { AnswersRepository } from "../repositories/answers-repository";
+import { Injectable } from "@nestjs/common";
 
-interface FecthQuestionAnswersUseCaseRequest {
+interface FetchQuestionAnswersUseCaseRequest {
   questionId: string;
   page: number;
 }
 
-type FecthQuestionAnswersUseCaseResponse = Result<
+type FetchQuestionAnswersUseCaseResponse = Result<
   null,
   {
     answers: Answer[];
   }
 >;
 
-export class FecthQuestionAnswersUseCase {
+@Injectable()
+export class FetchQuestionAnswersUseCase {
   constructor(private answersRepository: AnswersRepository) {}
 
   async execute({
     questionId,
     page,
-  }: FecthQuestionAnswersUseCaseRequest): Promise<FecthQuestionAnswersUseCaseResponse> {
+  }: FetchQuestionAnswersUseCaseRequest): Promise<FetchQuestionAnswersUseCaseResponse> {
     const answers = await this.answersRepository.findManyByQuestionId(
       questionId,
       { page }

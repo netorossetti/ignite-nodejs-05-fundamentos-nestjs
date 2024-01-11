@@ -36,7 +36,7 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name fecth_recent_question
+# @name fetch_recent_question
 GET {{baseUrl}}/questions?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

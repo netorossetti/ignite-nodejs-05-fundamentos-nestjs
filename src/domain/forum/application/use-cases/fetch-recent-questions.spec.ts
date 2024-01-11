@@ -1,20 +1,20 @@
 import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
-import { FecthRecentQuestionsUseCase } from "./fetch-recent-questions";
+import { FetchRecentQuestionsUseCase } from "./fetch-recent-questions";
 import { makeQuestion } from "test/factories/make-question";
 import { InMemoryQuestionAttachmentsRepository } from "test/repositories/in-memory-question-attachments-repository";
 
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
-let sut: FecthRecentQuestionsUseCase;
+let sut: FetchRecentQuestionsUseCase;
 
-describe("Fecth Recent Questions", () => {
+describe("Fetch Recent Questions", () => {
   beforeEach(() => {
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttachmentsRepository();
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository
     );
-    sut = new FecthRecentQuestionsUseCase(inMemoryQuestionsRepository);
+    sut = new FetchRecentQuestionsUseCase(inMemoryQuestionsRepository);
 
     // habilitar uso de datas fakes no new Date()
     vi.useFakeTimers();

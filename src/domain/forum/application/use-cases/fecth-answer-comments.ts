@@ -2,25 +2,25 @@ import { Result, success } from "@/core/result";
 import { AnswerComment } from "../../enterprise/entities/answer-comment";
 import { AnswerCommentsRepository } from "../repositories/answer-comments-repository";
 
-interface FecthAnswerCommentsUseCaseRequest {
+interface FetchAnswerCommentsUseCaseRequest {
   answerId: string;
   page: number;
 }
 
-type FecthAnswerCommentsUseCaseResponse = Result<
+type FetchAnswerCommentsUseCaseResponse = Result<
   null,
   {
     answerComments: AnswerComment[];
   }
 >;
 
-export class FecthAnswerCommentsUseCase {
+export class FetchAnswerCommentsUseCase {
   constructor(private answerCommentsRepository: AnswerCommentsRepository) {}
 
   async execute({
     answerId,
     page,
-  }: FecthAnswerCommentsUseCaseRequest): Promise<FecthAnswerCommentsUseCaseResponse> {
+  }: FetchAnswerCommentsUseCaseRequest): Promise<FetchAnswerCommentsUseCaseResponse> {
     const answerComments =
       await this.answerCommentsRepository.findManyByAnswerId(answerId, {
         page,

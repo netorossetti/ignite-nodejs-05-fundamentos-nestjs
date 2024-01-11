@@ -1,21 +1,21 @@
 import { makeAnswer } from "test/factories/make-answer";
-import { FecthQuestionAnswersUseCase } from "./fetch-question-answers";
+import { FetchQuestionAnswersUseCase } from "./fetch-question-answers";
 import { InMemoryAnswersRepository } from "test/repositories/in-memory-answers-repository";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachments-repository";
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
-let sut: FecthQuestionAnswersUseCase;
+let sut: FetchQuestionAnswersUseCase;
 
-describe("Fecth Question Answers", () => {
+describe("Fetch Question Answers", () => {
   beforeEach(() => {
     inMemoryAnswerAttachmentsRepository =
       new InMemoryAnswerAttachmentsRepository();
     inMemoryAnswersRepository = new InMemoryAnswersRepository(
       inMemoryAnswerAttachmentsRepository
     );
-    sut = new FecthQuestionAnswersUseCase(inMemoryAnswersRepository);
+    sut = new FetchQuestionAnswersUseCase(inMemoryAnswersRepository);
 
     // habilitar uso de datas fakes no new Date()
     vi.useFakeTimers();
