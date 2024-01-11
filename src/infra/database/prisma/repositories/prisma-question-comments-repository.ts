@@ -1,26 +1,42 @@
-import { DomainEvents } from "@/core/events/domain-events";
 import { PaginationParams } from "@/core/repositories/pagination-params";
 import { QuestionCommentsRepository } from "@/domain/forum/application/repositories/question-comments-repository";
 import { QuestionComment } from "@/domain/forum/enterprise/entities/question-comment";
 import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { PrismaQuestionCommentMapper } from "../mappers/prisma-question-comment-mapper";
 
 @Injectable()
 export class PrismaQuestionCommentsRepository
   implements QuestionCommentsRepository
 {
-  create(questionComment: QuestionComment): Promise<void> {
-    throw new Error("Method not implemented.");
+  constructor(private prisma: PrismaService) {}
+
+  async create(questionComment: QuestionComment) {
+    const data = PrismaQuestionCommentMapper.toPersistent(questionComment);
+    await this.prisma.comment.create({ data });
   }
-  delete(questionComment: QuestionComment): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(questionComment: QuestionComment) {
+    await this.prisma.comment.delete({
+      where: { id: questionComment.id.toString() },
+    });
   }
-  findById(id: string): Promise<QuestionComment | null> {
-    throw new Error("Method not implemented.");
+
+  async findById(id: string) {
+    const questionComment = await this.prisma.comment.findUnique({
+      where: { id },
+    });
+    if (!questionComment) return null;
+    return PrismaQuestionCommentMapper.toDomain(questionComment);
   }
-  findManyByQuestionId(
-    questionId: string,
-    params: PaginationParams
-  ): Promise<QuestionComment[]> {
-    throw new Error("Method not implemented.");
+
+  async findManyByQuestionId(questionId: string, { page }: PaginationParams) {
+    const questionComments = await this.prisma.comment.findMany({
+      where: { questionId: questionId },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
+
+    return questionComments.map(PrismaQuestionCommentMapper.toDomain);
   }
 }
