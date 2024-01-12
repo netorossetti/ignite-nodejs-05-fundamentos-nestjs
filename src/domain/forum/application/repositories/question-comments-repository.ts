@@ -3,10 +3,10 @@ import { QuestionComment } from "../../enterprise/entities/question-comment";
 
 export abstract class QuestionCommentsRepository {
   abstract create(questionComment: QuestionComment): Promise<void>;
-  abstract elete(questionComment: QuestionComment): Promise<void>;
+  abstract delete(questionComment: QuestionComment): Promise<void>;
 
-  abstract indById(id: string): Promise<QuestionComment | null>;
-  abstract indManyByQuestionId(
+  abstract findById(id: string): Promise<QuestionComment | null>;
+  abstract findManyByQuestionId(
     questionId: string,
     params: PaginationParams
   ): Promise<QuestionComment[]>;
