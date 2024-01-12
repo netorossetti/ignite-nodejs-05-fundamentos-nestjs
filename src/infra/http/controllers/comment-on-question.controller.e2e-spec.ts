@@ -8,7 +8,7 @@ import request from "supertest";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
 
-describe("E2E: Answer Question Controller", () => {
+describe("E2E: Comment On Question Controller", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let studentFactory: StudentFactory;
@@ -44,17 +44,17 @@ describe("E2E: Answer Question Controller", () => {
     const questionId = question.id.toString();
 
     const response = await request(app.getHttpServer())
-      .post(`/questions/${questionId}/answers`)
+      .post(`/questions/${questionId}/comments`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
-        content: "Nova resposta para a pergunta",
+        content: "Nova comentario na pergunta",
       });
 
     expect(response.statusCode).toBe(201);
 
-    const answerOnDatabase = await prisma.answer.findFirst({
-      where: { questionId: questionId },
+    const commentQuestionOnDatabase = await prisma.comment.findFirst({
+      where: { questionId: questionId, content: "Nova comentario na pergunta" },
     });
-    expect(answerOnDatabase).toBeTruthy();
+    expect(commentQuestionOnDatabase).toBeTruthy();
   });
 });
