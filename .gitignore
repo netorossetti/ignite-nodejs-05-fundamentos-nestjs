@@ -38,6 +38,7 @@ lerna-debug.log*
 
 # Env
 .env
+.env.test
 
 #RSA KEY´s
 private_key.pem
