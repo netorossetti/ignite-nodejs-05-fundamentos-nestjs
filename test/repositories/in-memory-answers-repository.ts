@@ -6,14 +6,16 @@ import { DomainEvents } from "@/core/events/domain-events";
 
 export class InMemoryAnswersRepository implements AnswersRepository {
   constructor(
-    private inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
+    private answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
   ) {}
 
   public items: Answer[] = [];
 
   async create(answer: Answer) {
     this.items.push(answer);
-
+    await this.answerAttachmentsRepository.createMany(
+      answer.attachments.getItems()
+    );
     DomainEvents.dispatchEventsForAggregate(answer.id);
   }
 
@@ -21,7 +23,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     const itemIndex = this.items.findIndex((item) => item.id === answer.id);
     if (itemIndex !== -1) {
       this.items.splice(itemIndex, 1);
-      this.inMemoryAnswerAttachmentsRepository.deleteManyByAnswerId(
+      this.answerAttachmentsRepository.deleteManyByAnswerId(
         answer.id.toString()
       );
     }
@@ -31,6 +33,12 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     const itemIndex = this.items.findIndex((item) => item.id === answer.id);
     if (itemIndex !== -1) {
       this.items[itemIndex] = answer;
+      await this.answerAttachmentsRepository.createMany(
+        answer.attachments.getNewItems()
+      );
+      await this.answerAttachmentsRepository.deleteMany(
+        answer.attachments.getRemovedItems()
+      );
       DomainEvents.dispatchEventsForAggregate(answer.id);
     }
   }
