@@ -51,4 +51,27 @@ describe("Create Question", () => {
       expect.objectContaining({ attachmentId: new UniqueEntityId("2") }),
     ]);
   });
+
+  it("should persist attachments when creating a new question", async () => {
+    const result = await sut.execute({
+      authorId: "1",
+      title: "Titulo da pergunta",
+      content: "Conteudo da pergunta",
+      attachmentsIds: ["1", "2"],
+    });
+
+    expect(result.isSuccess()).toBe(true);
+    if (!result.isSuccess()) return;
+
+    const question = result.value.question;
+
+    expect(inMemoryQuestionsRepository.items[0]).toEqual(question);
+    expect(inMemoryQuestionAttachmentsRepository.items).toHaveLength(2);
+    expect(inMemoryQuestionAttachmentsRepository.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ attachmentId: new UniqueEntityId("1") }),
+        expect.objectContaining({ attachmentId: new UniqueEntityId("2") }),
+      ])
+    );
+  });
 });
