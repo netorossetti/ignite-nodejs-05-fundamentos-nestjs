@@ -1,8 +1,5 @@
-import { RegisterStudentUseCase } from "./register-student";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository";
 import { FakeHasher } from "test/cryptography/fake-hasher";
-import { Student } from "../../enterprise/entities/student";
-import { StudentAlreadyExistsError } from "./errors/student-already-exists-error";
 import { FakeEncrypter } from "test/cryptography/fake-encrypter";
 import { AuthenticateStudentUseCase } from "./authenticate-student";
 import { makeStudent } from "test/factories/make-student";
