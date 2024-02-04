@@ -70,9 +70,18 @@ describe("E2E: Fetch Question Comments Controller", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
       comments: expect.arrayContaining([
-        expect.objectContaining({ content: "Comentário 1" }),
-        expect.objectContaining({ content: "Comentário 2" }),
-        expect.objectContaining({ content: "Comentário 3" }),
+        expect.objectContaining({
+          content: "Comentário 1",
+          authorName: user.name,
+        }),
+        expect.objectContaining({
+          content: "Comentário 2",
+          authorName: user.name,
+        }),
+        expect.objectContaining({
+          content: "Comentário 3",
+          authorName: user.name,
+        }),
       ]),
     });
   });
