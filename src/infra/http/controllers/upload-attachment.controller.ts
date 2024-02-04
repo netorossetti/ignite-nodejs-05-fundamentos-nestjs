@@ -37,8 +37,6 @@ export class UploadAttachmentController {
       body: file.buffer,
     });
 
-    console.log(result);
-
     if (result.isFailure()) {
       const error = result.value;
       switch (error.constructor) {
@@ -54,6 +52,5 @@ export class UploadAttachmentController {
     return {
       attachmentId: attachment.id.toString(),
     };
-    console.log(file);
   }
 }

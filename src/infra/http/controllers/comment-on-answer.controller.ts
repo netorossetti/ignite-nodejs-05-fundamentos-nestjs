@@ -33,18 +33,15 @@ export class CommentOnAnswerController {
   ) {
     const { content } = body;
     const userId = user.sub;
-    try {
-      const result = await this.commentOnAnswer.execute({
-        content,
-        answerId,
-        authorId: userId,
-      });
 
-      if (result.isFailure()) {
-        throw new BadRequestException();
-      }
-    } catch (error) {
-      console.log(error);
+    const result = await this.commentOnAnswer.execute({
+      content,
+      answerId,
+      authorId: userId,
+    });
+
+    if (result.isFailure()) {
+      throw new BadRequestException();
     }
   }
 }
