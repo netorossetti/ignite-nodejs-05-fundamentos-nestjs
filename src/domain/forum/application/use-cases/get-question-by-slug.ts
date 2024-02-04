@@ -1,8 +1,8 @@
 import { Result, failure, success } from "@/core/result";
-import { Question } from "../../enterprise/entities/question";
 import { QuestionsRepository } from "../repositories/questions-repository";
 import { ResourceNotFoundError } from "@/core/error/errors/resource-not-found-error";
 import { Injectable } from "@nestjs/common";
+import { QuestionDetails } from "../../enterprise/entities/value-objects/question-details";
 
 interface GetQuestionBySlugUseCaseRequest {
   slug: string;
@@ -11,7 +11,7 @@ interface GetQuestionBySlugUseCaseRequest {
 type GetQuestionBySlugUseCaseResponse = Result<
   ResourceNotFoundError,
   {
-    question: Question;
+    question: QuestionDetails;
   }
 >;
 
@@ -22,7 +22,7 @@ export class GetQuestionBySlugUseCase {
   async execute({
     slug,
   }: GetQuestionBySlugUseCaseRequest): Promise<GetQuestionBySlugUseCaseResponse> {
-    const question = await this.questionsRepository.findQuestionBySlug(slug);
+    const question = await this.questionsRepository.findDetailsBySlug(slug);
 
     if (!question) {
       return failure(new ResourceNotFoundError());

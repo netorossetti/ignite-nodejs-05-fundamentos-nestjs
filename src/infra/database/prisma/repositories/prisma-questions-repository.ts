@@ -48,7 +48,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     return PrismaQuestionMapper.toDomain(question);
   }
 
-  async findQuestionBySlug(slug: string): Promise<Question | null> {
+  async findBySlug(slug: string): Promise<Question | null> {
     const question = await this.prisma.question.findUnique({ where: { slug } });
     if (!question) return null;
     return PrismaQuestionMapper.toDomain(question);
