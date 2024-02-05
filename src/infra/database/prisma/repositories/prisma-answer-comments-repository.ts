@@ -17,7 +17,6 @@ export class PrismaAnswerCommentsRepository
     const data = PrismaAnswerCommentMapper.toPersistent(answerComment);
     await this.prisma.comment.create({ data });
 
-    console.log("Disparando evento de dominio do comentari da resposta");
     DomainEvents.dispatchEventsForAggregate(answerComment.id);
   }
 

@@ -63,6 +63,5 @@ describe("E2E: On Question Comment Created", () => {
     });
 
     const notifications = await prisma.notification.findMany();
-    console.log(notifications);
   });
 });
