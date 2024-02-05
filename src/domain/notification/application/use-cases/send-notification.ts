@@ -2,6 +2,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { Result, success } from "@/core/result";
 import { Notification } from "../../enterprise/entities/notification";
 import { NotificationsRepository } from "../repositories/notifications-repository";
+import { Injectable } from "@nestjs/common";
 
 export interface SendNotificationUseCaseRequest {
   recipientId: string;
@@ -16,6 +17,7 @@ export type SendNotificationUseCaseResponse = Result<
   }
 >;
 
+@Injectable()
 export class SendNotificationUseCase {
   constructor(private notificationsRepository: NotificationsRepository) {}
 
