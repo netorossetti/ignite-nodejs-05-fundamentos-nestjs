@@ -5,6 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaQuestionCommentMapper } from "../mappers/prisma-question-comment-mapper";
 import { PrismaCommentWithAuthorMapper } from "../mappers/prisma-comment-with-author-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
 
 @Injectable()
 export class PrismaQuestionCommentsRepository
@@ -15,6 +16,8 @@ export class PrismaQuestionCommentsRepository
   async create(questionComment: QuestionComment) {
     const data = PrismaQuestionCommentMapper.toPersistent(questionComment);
     await this.prisma.comment.create({ data });
+
+    DomainEvents.dispatchEventsForAggregate(questionComment.id);
   }
 
   async delete(questionComment: QuestionComment) {

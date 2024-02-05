@@ -5,6 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaAnswerCommentMapper } from "../mappers/prisma-answer-comment-mapper";
 import { PrismaCommentWithAuthorMapper } from "../mappers/prisma-comment-with-author-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
 
 @Injectable()
 export class PrismaAnswerCommentsRepository
@@ -15,6 +16,9 @@ export class PrismaAnswerCommentsRepository
   async create(answerComment: AnswerComment) {
     const data = PrismaAnswerCommentMapper.toPersistent(answerComment);
     await this.prisma.comment.create({ data });
+
+    console.log("Disparando evento de dominio do comentari da resposta");
+    DomainEvents.dispatchEventsForAggregate(answerComment.id);
   }
 
   async delete(answerComment: AnswerComment) {

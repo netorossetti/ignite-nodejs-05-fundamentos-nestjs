@@ -3,6 +3,7 @@ import { Student } from "@/domain/forum/enterprise/entities/student";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaStudentMapper } from "../mappers/prisma-student-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
 
 @Injectable()
 export class PrismaStudentsRepository implements StudentsRepository {
@@ -11,6 +12,7 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async create(student: Student): Promise<void> {
     const data = PrismaStudentMapper.toPersistent(student);
     await this.prisma.user.create({ data });
+    DomainEvents.dispatchEventsForAggregate(student.id);
   }
 
   async findByEmail(email: string): Promise<Student | null> {

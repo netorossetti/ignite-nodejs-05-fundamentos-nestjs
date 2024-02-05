@@ -6,28 +6,30 @@ import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
-import { AttachmentFactory } from "test/factories/make-attachments";
+import { AnswerFactory } from "test/factories/make-answer";
 import { QuestionFactory } from "test/factories/make-question";
 import { StudentFactory } from "test/factories/make-student";
 import { waitFor } from "test/utils/wait-for";
 
-describe("E2E: On Answer Created", () => {
+describe("E2E: On Answer Comment Created", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let studentFactory: StudentFactory;
   let questionFactory: QuestionFactory;
+  let answerFactory: AnswerFactory;
   let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory, AttachmentFactory],
+      providers: [StudentFactory, QuestionFactory, AnswerFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
     prisma = moduleRef.get(PrismaService);
     studentFactory = moduleRef.get(StudentFactory);
     questionFactory = moduleRef.get(QuestionFactory);
+    answerFactory = moduleRef.get(AnswerFactory);
     jwt = moduleRef.get(JwtService);
 
     // Permitir disparos de eventos de dominios no teste E2E
@@ -40,7 +42,7 @@ describe("E2E: On Answer Created", () => {
     await app.close();
   });
 
-  it("should send notification when answer is created", async () => {
+  it("should send notification when answer comment is created", async () => {
     const user = await studentFactory.makePrismaStudent();
     const accessToken = jwt.sign({ sub: user.id.toString() });
 
@@ -48,22 +50,27 @@ describe("E2E: On Answer Created", () => {
       authorId: user.id,
     });
 
-    const questionId = question.id.toString();
+    const answer = await answerFactory.makePrismaAnswer({
+      questionId: question.id,
+      authorId: user.id,
+    });
+    const answerId = answer.id.toString();
 
     await request(app.getHttpServer())
-      .post(`/questions/${questionId}/answers`)
+      .post(`/answers/${answerId}/comments`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
-        content: "Nova resposta para a pergunta",
-        attachments: [],
+        content: "Nova comentario na resposta",
       });
 
     await waitFor(async () => {
-      const notificationOnDatabase = await prisma.notification.findFirst({
+      const notificationsOnDatabase = await prisma.notification.findFirst({
         where: { recipientId: user.id.toString() },
       });
-
-      expect(notificationOnDatabase).not.toBeNull();
+      expect(notificationsOnDatabase).not.toBeNull();
     });
+
+    const notifications = await prisma.notification.findMany();
+    console.log(notifications);
   });
 });
